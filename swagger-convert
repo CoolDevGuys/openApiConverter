@@ -1,0 +1,48 @@
+#!/bin/bash
+set -e
+
+merge=false
+
+usage() {
+  echo "Usage: swagger-convert [-m] [-t yaml|json] [-o <file.html>] path-to-file" 1>&2
+  exit 1
+}
+
+while getopts mt:o:h OPTION; do
+  case "${OPTION}" in
+  m) merge=true ;;
+  t) type=${OPTARG} ;;
+  o) output=${OPTARG} ;;
+  ?)
+    usage
+    ;;
+  esac
+done
+shift "$(($OPTIND - 1))"
+
+if [ -z ${type+x} ]; then
+  echo "type -t is required" &
+  exit 1
+fi
+if [ -z ${output+x} ]; then
+  echo "output -o is required" &
+  exit 1
+fi
+if [ -z $1 ]; then
+  echo "file to be converted is required" &
+  exit 1
+fi
+
+file=$1
+file_to_convert=$file
+
+if [ $merge = true ]; then
+  echo ">> [INFO] Merging files 📚"
+  file_to_convert="/tmp/compiled.${type}"
+  swagger-cli bundle -t "$type" -o "$file_to_convert"  "$file"
+fi
+
+echo ">> [INFO] Converting file to html 🧪..."
+python /usr/bin/swagger-to-html.py <"${file_to_convert}" >"${output}"
+
+echo ">> [INFO] Finished! 🎉 $output file created"
