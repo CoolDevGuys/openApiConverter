@@ -1,5 +1,6 @@
 # OpenAPI Converter 🚀
 Tool to convert Swagger files into HTML, it renders the classic swagger HTML editor.
+It uses a python script from this repository: https://gist.github.com/oseiskar/dbd51a3727fc96dcf5ed189fca491fb3#file-swagger-yaml-to-html-py and the `swagger-cli` from apiDevTools: https://githubhelp.com/APIDevTools/swagger-cli
 
 ## How to use
 Execute the script `swagger-convert` with the proper configuration flags:
@@ -12,5 +13,5 @@ Execute the script `swagger-convert` with the proper configuration flags:
 
 example:
 ```bash
-swagger-convert -t yaml -o /code/apps/api/templates/pages/documentation/swagger.html.twig -m /code/etc/docs/swagger_api.yaml
+docker run --rm -i --volume $(current-dir)code:/code alexromer0/swagger-to-html swagger-convert -t yaml -o /code/apps/api/templates/pages/documentation/swagger.html.twig -m /code/etc/docs/swagger_api.yaml
 ```
