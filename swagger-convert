@@ -2,20 +2,19 @@
 set -e
 
 merge=false
-
+single=false
 usage() {
-  echo "Usage: swagger-convert [-m] [-t yaml|json] [-o <file.html>] path-to-file" 1>&2
+  echo "Usage: swagger-convert [-m] [-t yaml|json] [-o <file.html>] -s path-to-file " 1>&2
   exit 1
 }
 
-while getopts mt:o:h OPTION; do
+while getopts mst:o:h OPTION; do
   case "${OPTION}" in
   m) merge=true ;;
   t) type=${OPTARG} ;;
   o) output=${OPTARG} ;;
-  ?)
-    usage
-    ;;
+  s) single=true ;;
+  ?) usage ;;
   esac
 done
 shift "$(($OPTIND - 1))"
@@ -39,7 +38,12 @@ file_to_convert=$file
 if [ $merge = true ]; then
   echo ">> [INFO] Merging files 📚"
   file_to_convert="/tmp/compiled.${type}"
-  swagger-cli bundle -t "$type" -o "$file_to_convert"  "$file"
+  if [ $single = true ]; then
+      echo ">> [INFO] Merging into single file <-s>"
+      swagger-cli bundle -t "$type" -r -o "$file_to_convert"  "$file"
+    else
+      swagger-cli bundle -t "$type" -o "$file_to_convert"  "$file"
+  fi
 fi
 
 echo ">> [INFO] Converting file to html 🧪..."

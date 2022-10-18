@@ -9,7 +9,9 @@ Execute the script `swagger-convert` with the proper configuration flags:
 
 -o: (String) The output path and file where the converted file should be placed.
 
--m: (Boolean) Use the `-m` flag when you have splitted your swagger file into multiple files (for example you have different files per responses or payloads), the script will detect the imported files and merge the content into one file.
+-m: (No value) Use the `-m` flag when you have splitted your swagger file into multiple files (for example you have different files per responses or payloads), the script will detect the imported files and merge the content into one file.
+
+-s: (No value) Sometimes we have multiple level $ref files and the default merge strategy does not work, by passing this option the output will be bigger but it will solve the multilevel files problem by importing the $ref as many times as it defined 
 
 example:
 ```bash
